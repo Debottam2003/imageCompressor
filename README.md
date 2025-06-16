@@ -20,3 +20,5 @@ This project was created using `bun init` in bun v1.2.16. [Bun](https://bun.sh) 
 # Tech Stack 
 HTML, Vanila CSS, Vanila Javascript for frontend
 Bun Typescript and fs module for backend
+
+<img src="![Image](https://github.com/user-attachments/assets/6b3b1f29-6316-484e-808f-7d431a69bcfb)" />
