@@ -3,11 +3,19 @@ const body = document.querySelector("body");
 form.addEventListener('submit', async (e) => {
     e.preventDefault();
     const file = document.getElementById('file');
-    console.log(file.files[0].size);
-    // 5 mb limit
-    if (file.files[0].size > 5000000) {
-        window.alert("File Size is too large");
+
+    if(file.files.length === 0) {
+        window.alert("Choose a File");
+        return;
     }
+
+    console.log(file.files[0].size);
+    // 50 mb limit
+    if (file.files[0].size > 50000000) {
+        window.alert("File Size is too large");
+        return;
+    }
+
     else {
         const formdata = new FormData();
         formdata.append('file', file.files[0]);
@@ -32,6 +40,13 @@ form.addEventListener('submit', async (e) => {
                 downlaod_btn.setAttribute("download", `${file.files[0].name}`);
 
                 body.appendChild(downlaod_btn);
+
+                setTimeout(() => {
+                    downlaod_btn.remove();
+                }, 15000);
+
+                form.reset();
+
             }
         }
         catch (err) {
