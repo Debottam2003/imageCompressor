@@ -2,6 +2,7 @@ import fs from "fs/promises";
 import express from "express";
 import sharp from "sharp";
 import path from "path";
+import cors from "cors";
 import { fileURLToPath } from "url";
 import multer from "multer";
 import type { Request, Response, NextFunction } from "express";
@@ -21,6 +22,7 @@ async function read() {
 read();
 
 const app = express();
+app.use(cors());
 
 // app.use(express.urlencoded({ extended: true }));
 app.use(express.static(path.join(__dirname, "public")));
@@ -51,18 +53,18 @@ app.post("/compress", upload.single("file"), async (req: Request, res: Response)
       } else if (req.file.mimetype == "image/jpeg") {
         bufferData = await sharp(bufferData).jpeg({quality: 50}).toBuffer();
       }
-      await fs.writeFile(`./public/images/${req.file.originalname}`, bufferData, "utf-8");
+      await fs.writeFile(`./public/images/${req.file.originalname}`, bufferData);
       res.status(200).json({
         message: "Image Compressed Successfully",
       });
 
     } else {
-      res.json({
+      res.status(500).json({
         message: "Error Working on the Image",
       });
     }
   } catch (err) {
-    res.json({
+    res.status(500).json({
       message: "Internal server error",
     });
   }

@@ -25,7 +25,7 @@ form.addEventListener('submit', async (e) => {
                 method: "POST",
                 body: formdata
             });
-            if (!response.ok || response.status != 200) {
+            if (!response.ok || response.status !== 200) {
                 let data = await response.json();
                 alert(data.message);
             }
