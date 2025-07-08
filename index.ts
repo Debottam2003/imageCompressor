@@ -19,7 +19,7 @@ async function read() {
     console.log(i, " : ", String.fromCharCode(i));
   }
 }
-read();
+// read();
 
 const app = express();
 app.use(cors());
