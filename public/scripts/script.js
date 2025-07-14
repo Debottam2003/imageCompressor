@@ -21,7 +21,7 @@ form.addEventListener('submit', async (e) => {
         formdata.append('file', file.files[0]);
         console.log(formdata);
         try {
-            let response = await fetch("http://localhost:3333/compress", {
+            let response = await fetch("https://imagecompressor-8z4u.onrender.com/compress", {
                 method: "POST",
                 body: formdata
             });
