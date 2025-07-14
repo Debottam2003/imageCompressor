@@ -21,6 +21,7 @@ form.addEventListener('submit', async (e) => {
         formdata.append('file', file.files[0]);
         console.log(formdata);
         try {
+            document.getElementById("compress").textContent = "Doing...";
             let response = await fetch("https://imagecompressor-8z4u.onrender.com/compress", {
                 method: "POST",
                 body: formdata
@@ -31,6 +32,7 @@ form.addEventListener('submit', async (e) => {
             }
             else {
                 let data = await response.json();
+                document.getElementById("compress").textContent = "Compress";
 
                 let downloadBtn = document.createElement("a");
                 downloadBtn.innerHTML = "Download File";
