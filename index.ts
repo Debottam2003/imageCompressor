@@ -47,16 +47,16 @@ app.post(
         // The buffer size will be the file size of the uploaded image (byte slice)
         // Each byte is consist of 8 bits and are decimal numbers 0-255 but in console printed as hexadecimal
         // each character is represented using 1 byte
-        console.log(req.file?.buffer);
+        // console.log(req.file?.buffer);
         let bufferData = req.file?.buffer;
-        console.log(req.file);
+        // console.log(req.file);
 
         if (req.file.mimetype == "image/png") {
           bufferData = await sharp(bufferData).png({ quality: 50 }).toBuffer();
         } else if (req.file.mimetype == "image/jpeg") {
           bufferData = await sharp(bufferData).jpeg({ quality: 50 }).toBuffer();
         }
-        
+
         const outputPath = path.join("/tmp", req.file.originalname);
         await fs.writeFile(outputPath, bufferData);
 
