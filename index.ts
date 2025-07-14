@@ -62,6 +62,7 @@ app.post(
 
         res.status(200).json({
           message: "Image Compressed Successfully",
+          filename: req.file.originalname,
         });
       } else {
         res.status(500).json({
@@ -72,6 +73,23 @@ app.post(
       res.status(500).json({
         message: "Internal server error",
       });
+    }
+  }
+);
+
+app.get(
+  "/download/:filename",
+  (req: Request, res: Response, next: NextFunction) => {
+    if (req.params.filename) {
+      const filePath = path.join("/tmp", req.params.filename);
+      res.download(filePath, (err) => {
+        if (err) {
+          console.error("Error sending file:", err);
+          res.status(404).json({ message: "File not found or expired" });
+        }
+      });
+    } else {
+      throw new Error("Provide params");
     }
   }
 );
