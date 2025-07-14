@@ -38,37 +38,43 @@ app.get("/", (req: Request, res: Response) => {
 
 // "If req.file exists (i.e., is not null or undefined), then access .buffer.
 // Otherwise, return undefined instead of throwing an error."
-app.post("/compress", upload.single("file"), async (req: Request, res: Response) => {
-  try {
-    if (req.file?.buffer) {
-      // The buffer size will be the file size of the uploaded image (byte slice)
-      // Each byte is consist of 8 bits and are decimal numbers 0-255 but in console printed as hexadecimal
-      // each character is represented using 1 byte
-      console.log(req.file?.buffer);
-      let bufferData = req.file?.buffer;
-      console.log(req.file);
+app.post(
+  "/compress",
+  upload.single("file"),
+  async (req: Request, res: Response) => {
+    try {
+      if (req.file?.buffer) {
+        // The buffer size will be the file size of the uploaded image (byte slice)
+        // Each byte is consist of 8 bits and are decimal numbers 0-255 but in console printed as hexadecimal
+        // each character is represented using 1 byte
+        console.log(req.file?.buffer);
+        let bufferData = req.file?.buffer;
+        console.log(req.file);
 
-      if(req.file.mimetype == "image/png"){
-        bufferData = await sharp(bufferData).png({quality: 50}).toBuffer();
-      } else if (req.file.mimetype == "image/jpeg") {
-        bufferData = await sharp(bufferData).jpeg({quality: 50}).toBuffer();
+        if (req.file.mimetype == "image/png") {
+          bufferData = await sharp(bufferData).png({ quality: 50 }).toBuffer();
+        } else if (req.file.mimetype == "image/jpeg") {
+          bufferData = await sharp(bufferData).jpeg({ quality: 50 }).toBuffer();
+        }
+        
+        const outputPath = path.join("/tmp", req.file.originalname);
+        await fs.writeFile(outputPath, bufferData);
+
+        res.status(200).json({
+          message: "Image Compressed Successfully",
+        });
+      } else {
+        res.status(500).json({
+          message: "Error Working on the Image",
+        });
       }
-      await fs.writeFile(`./public/images/${req.file.originalname}`, bufferData);
-      res.status(200).json({
-        message: "Image Compressed Successfully",
-      });
-
-    } else {
+    } catch (err) {
       res.status(500).json({
-        message: "Error Working on the Image",
+        message: "Internal server error",
       });
     }
-  } catch (err) {
-    res.status(500).json({
-      message: "Internal server error",
-    });
   }
-}); 
+);
 
 // custom interface for type safety
 interface ErrorWithStatus extends Error {
@@ -82,18 +88,20 @@ interface ErrorWithStatus extends Error {
 //   }
 
 // If Express sees an error passed to next(err) or an uncaught synchronous error,
-// it skips all remaining regular middleware and jumps to the first error-handling 
+// it skips all remaining regular middleware and jumps to the first error-handling
 // middleware it finds — which has this special signature: (err, req, res, next)
 
 // Error Handler
-app.use((err: ErrorWithStatus, req: Request, res: Response, next: NextFunction) => {
-  if(err) {
-  console.error(err.stack); // Log to server
-  res.status(err.status || 500).json({
-    message: err.message || "Something went wrong!"
-  });
+app.use(
+  (err: ErrorWithStatus, req: Request, res: Response, next: NextFunction) => {
+    if (err) {
+      console.error(err.stack); // Log to server
+      res.status(err.status || 500).json({
+        message: err.message || "Something went wrong!",
+      });
+    }
   }
-});
+);
 
 // Listening to the port and the socket connection has build from there
 app.listen(3333, () => {
