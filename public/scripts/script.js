@@ -4,7 +4,7 @@ form.addEventListener('submit', async (e) => {
     e.preventDefault();
     const file = document.getElementById('file');
 
-    if(file.files.length === 0) {
+    if (file.files.length === 0) {
         window.alert("Choose a File");
         return;
     }
@@ -31,22 +31,22 @@ form.addEventListener('submit', async (e) => {
             }
             else {
                 let data = await response.json();
-                // alert(data.message);
-                let downlaod_btn = document.createElement("a");
-                downlaod_btn.innerHTML = "Download File";
-                downlaod_btn.classList.add("download-btn");
-                // href = file path that need to be downloaded
-                downlaod_btn.setAttribute("href", `/images/${file.files[0].name}`);
-                downlaod_btn.setAttribute("download", `${file.files[0].name}`);
 
-                body.appendChild(downlaod_btn);
+                let downloadBtn = document.createElement("a");
+                downloadBtn.innerHTML = "Download File";
+                downloadBtn.classList.add("download-btn");
+
+                // ⬇️ Corrected URL using server's filename from response
+                downloadBtn.setAttribute("href", `https://imagecompressor-8z4u.onrender.com/download/${data.filename}`);
+                downloadBtn.setAttribute("download", `${data.filename}`);
+
+                body.appendChild(downloadBtn);
 
                 setTimeout(() => {
-                    downlaod_btn.remove();
+                    downloadBtn.remove();
                 }, 15000);
 
                 form.reset();
-
             }
         }
         catch (err) {
